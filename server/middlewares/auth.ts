@@ -2,11 +2,13 @@ import {  NextFunction, Request, Response} from 'express';
 import { IUser, User } from '../models/users.js';
 import jwt from 'jsonwebtoken';
 
-
+export interface AuthRequest extends Request{
+  user?: IUser;
+}
 
 
 export const protect = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> =>{
