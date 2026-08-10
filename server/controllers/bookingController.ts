@@ -2,11 +2,11 @@
 //POST /api/bookings
 // acces private
 import { Response } from 'express';
-import { AuthenticatedRequest } from '../middlewares/auth.js';
+import { AuthRequest } from '../middlewares/auth.js';
 import { Restaurant } from '../models/Restaurant.js';
 import { Booking } from '../models/Booking.js';
 
-export const createBooking = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const createBooking = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { restaurantId, date, time, numberOfGuests, occasion, specialRequests } = req.body;
 
@@ -69,7 +69,7 @@ export const createBooking = async (req: AuthenticatedRequest, res: Response): P
 //GET /api/bookings/my
 // acces private
 
-export const getMyBookings = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const getMyBookings = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const bookings = await Booking.find({ user: req.user?._id }).populate("restaurant", "name location image address slug").sort({ date: -1, time: -1 });
         res.json(bookings);
@@ -83,7 +83,7 @@ export const getMyBookings = async (req: AuthenticatedRequest, res: Response): P
 //PUT /api/bookings/:id/cancel
 // acces private
 
-export const cancelBooking = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const cancelBooking = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
 
         const booking = await Booking.findById(req.params.id);

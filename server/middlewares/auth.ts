@@ -2,12 +2,16 @@ import {  NextFunction, Request, Response} from 'express';
 import { IUser, User } from '../models/users.js';
 import jwt from 'jsonwebtoken';
 
-
-export interface AuthenticatedRequest extends Request{
-    user?: IUser
+export interface AuthRequest extends Request{
+  user?: IUser;
 }
 
-export const protect = async (req: AuthenticatedRequest, res: Response, next: NextFunction) : Promise<void> => {
+
+export const protect = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> =>{
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -37,7 +41,7 @@ export const protect = async (req: AuthenticatedRequest, res: Response, next: Ne
   }
 };
 
-export const adminOnly = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const adminOnly = (req: Request, res: Response, next: NextFunction): void => {
     if (req.user && req.user.role === 'admin') {
         next();
     } else {
@@ -45,7 +49,7 @@ export const adminOnly = (req: AuthenticatedRequest, res: Response, next: NextFu
     }
 }
 
-export const ownerOnly = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const ownerOnly = (req: Request, res: Response, next: NextFunction): void => {
     if (req.user && (req.user.role === 'owner' || req.user.role === 'admin')) {
         next();
     } else {
